@@ -80,13 +80,6 @@ public class PPGStats extends Activity {
                 else if (mDisplayText.toString().equals("explosion")) {
                     playSound(1);
                     updateUI("Boom!");
-                    mDisplayText.setLength(0);
-                    mDisplayText.append(data.getString(keyThrown));
-                    TextView thrownDistance = (TextView)findViewById(R.id.throwDistance);
-                    thrownDistance.setText(mDisplayText.toString());
-                }
-                else {
-
                 }
             }
         };
