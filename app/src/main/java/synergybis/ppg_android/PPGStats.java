@@ -95,7 +95,11 @@ public class PPGStats extends Activity {
             @Override
             public void receiveData(final Context context, int transactionId, PebbleDictionary data) {
                 PebbleKit.sendAckToPebble(context, transactionId);
-                mDisplayText.append("Action! " + data.getString(123456789));
+                if (pinFlag) {
+                    mDisplayText.append("BOOM!");
+                } else {
+                    mDisplayText.append("Action! " + data.getString(keyMessage));
+                }
                 updateUI();
             }
         };
