@@ -1,5 +1,6 @@
 package synergybis.ppg_android;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +8,9 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.media.MediaPlayer;
+import android.widget.Button;
+import android.view.View;
 import android.widget.TextView;
 
 import com.getpebble.android.kit.PebbleKit;
@@ -21,9 +25,30 @@ public class PPGStats extends Activity {
     private PebbleDataReceiver mDataReceiver = null;
     private final StringBuilder mDisplayText = new StringBuilder();
 
+    private static MediaPlayer mediaPlayer;
+
+    private static String audioFilePath;
+    private static Button playButton;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ppgstats);
+
+        Button playButton = (Button)findViewById(R.id.playButton);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
+                mediaPlayer.setVolume(2,2);
+
+                mediaPlayer.start();
+
+            }
+        });
+
+
     }
 
 
