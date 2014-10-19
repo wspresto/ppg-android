@@ -41,7 +41,7 @@ public class PPGStats extends Activity {
             @Override
             public void onClick(View v) {
                 mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
-                mediaPlayer.setVolume(2,2);
+                mediaPlayer.setVolume(5,5);
 
                 mediaPlayer.start();
 
