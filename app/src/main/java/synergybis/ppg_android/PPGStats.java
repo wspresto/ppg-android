@@ -2,21 +2,17 @@ package synergybis.ppg_android;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.media.MediaPlayer;
 import android.widget.Button;
-import android.view.View;
 import android.widget.TextView;
 
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
-import com.google.common.primitives.UnsignedInteger;
 
 import java.util.UUID;
 
@@ -24,8 +20,7 @@ public class PPGStats extends Activity {
     private static final String PPG_UUID = "0a3e5f23-59e7-46c8-9c46-66afa7347432";
 
     private static final int keyMessage = 1234567890;
-    private static final int keyExplosion = 999999999;
-    private static final boolean pinFlag = false;   //When this is true, wait for the KABOOM. Ha.
+    private static boolean pinFlag = false;   //When this is true, wait for the KABOOM. Ha.
 
     private PebbleDataReceiver mDataReceiver = null;
     private final StringBuilder mDisplayText = new StringBuilder();
@@ -35,25 +30,13 @@ public class PPGStats extends Activity {
     private static MediaPlayer mediaPlayer;
 
     private static String audioFilePath;
-    private static Button playButton;
+    private static TextView armedDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ppgstats);
-
-        Button playButton = (Button)findViewById(R.id.playButton);
-
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
-                mediaPlayer.start();
-
-            }
-        });
-
-
+        armedDisplay = (TextView)findViewById(R.id.armedDisplay);
     }
 
 
@@ -93,11 +76,10 @@ public class PPGStats extends Activity {
             @Override
             public void receiveData(final Context context, int transactionId, PebbleDictionary data) {
                 PebbleKit.sendAckToPebble(context, transactionId);
-                if (pinFlag) {
-                    mDisplayText.append("BOOM!");
-                } else {
-                    mDisplayText.append("Action! " + data.getString(keyMessage));
-                }
+                mDisplayText.setLength(0);
+                mDisplayText.append(data.getString(keyMessage));
+                playSound();
+                pinFlag = !pinFlag;
                 updateUI();
             }
         };
@@ -106,8 +88,16 @@ public class PPGStats extends Activity {
     }
 
     private void updateUI() {
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(mDisplayText.toString());
+        armedDisplay.setText(mDisplayText.toString());
+    }
+
+    private void playSound() {
+        if (pinFlag) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
+        } else {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.pullpin);
+        }
+        mediaPlayer.start();
     }
 
 }
