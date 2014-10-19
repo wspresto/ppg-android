@@ -3,11 +3,9 @@ package synergybis.ppg_android;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.media.MediaPlayer;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.getpebble.android.kit.PebbleKit;
@@ -20,16 +18,13 @@ public class PPGStats extends Activity {
     private static final String PPG_UUID = "0a3e5f23-59e7-46c8-9c46-66afa7347432";
 
     private static final int keyMessage = 1234567890;
-    private static boolean pinFlag = false;   //When this is true, wait for the KABOOM. Ha.
+    private static final int keyThrown = 987654321;
 
     private PebbleDataReceiver mDataReceiver = null;
     private final StringBuilder mDisplayText = new StringBuilder();
 
-//    SharedPreferences records =
-
     private static MediaPlayer mediaPlayer;
 
-    private static String audioFilePath;
     private static TextView armedDisplay;
 
     @Override
@@ -78,24 +73,38 @@ public class PPGStats extends Activity {
                 PebbleKit.sendAckToPebble(context, transactionId);
                 mDisplayText.setLength(0);
                 mDisplayText.append(data.getString(keyMessage));
-                playSound();
-                pinFlag = !pinFlag;
-                updateUI();
+                if (mDisplayText.toString().equals("pullpin")) {
+                    playSound(0);
+                    updateUI("Fire in the hole...!");
+                }
+                else if (mDisplayText.toString().equals("explosion")) {
+                    playSound(1);
+                    updateUI("Boom!");
+                    mDisplayText.setLength(0);
+                    mDisplayText.append(data.getString(keyThrown));
+                    TextView thrownDistance = (TextView)findViewById(R.id.throwDistance);
+                    thrownDistance.setText(mDisplayText.toString());
+                }
+                else {
+
+                }
             }
         };
 
         PebbleKit.registerReceivedDataHandler(this, mDataReceiver);
     }
 
-    private void updateUI() {
-        armedDisplay.setText(mDisplayText.toString());
+    private void updateUI(String text) {
+        armedDisplay.setText(text);
     }
 
-    private void playSound() {
-        if (pinFlag) {
-            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
-        } else {
-            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.pullpin);
+    private void playSound(int soundEffect) {
+        switch (soundEffect) {
+            case 0:
+                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.pullpin);
+                break;
+            case 1:
+                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
         }
         mediaPlayer.start();
     }
