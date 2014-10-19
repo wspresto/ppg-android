@@ -1,14 +1,26 @@
 package synergybis.ppg_android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.util.PebbleDictionary;
+import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
+import com.google.common.primitives.UnsignedInteger;
+
+import java.util.UUID;
 
 public class PPGStats extends Activity {
+    private static final String PPG_UUID = "0a3e5f23-59e7-46c8-9c46-66afa7347432";
+    private PebbleDataReceiver mDataReceiver = null;
+    private final StringBuilder mDisplayText = new StringBuilder();
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ppgstats);
@@ -34,5 +46,34 @@ public class PPGStats extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mDataReceiver != null) {
+            unregisterReceiver(mDataReceiver);
+            mDataReceiver = null;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mDataReceiver = new PebbleDataReceiver(UUID.fromString(PPG_UUID)) {
+            @Override
+            public void receiveData(final Context context, int transactionId, PebbleDictionary data) {
+                PebbleKit.sendAckToPebble(context, transactionId);
+                mDisplayText.append("Action! " + data.getString(123456789));
+                updateUI();
+            }
+        };
+
+        PebbleKit.registerReceivedDataHandler(this, mDataReceiver);
+    }
+
+    private void updateUI() {
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText(mDisplayText.toString());
+    }
 
 }
