@@ -1,8 +1,8 @@
 package synergybis.ppg_android;
 
-
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -22,8 +22,15 @@ import java.util.UUID;
 
 public class PPGStats extends Activity {
     private static final String PPG_UUID = "0a3e5f23-59e7-46c8-9c46-66afa7347432";
+
+    private static final int keyMessage = 1234567890;
+    private static final int keyExplosion = 999999999;
+    private static final boolean pinFlag = false;   //When this is true, wait for the KABOOM. Ha.
+
     private PebbleDataReceiver mDataReceiver = null;
     private final StringBuilder mDisplayText = new StringBuilder();
+
+//    SharedPreferences records =
 
     private static MediaPlayer mediaPlayer;
 
