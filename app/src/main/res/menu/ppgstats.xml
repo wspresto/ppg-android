@@ -1,8 +1,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".PPGStats" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <item android:id="@+id/Deagle"
+        android:title="@string/deagle"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/PewPew"
+        android:title="@string/pewpew"
+        android:orderInCategory="99"
+        android:showAsAction="never" />
+    <item android:id="@+id/FiveSeven"
+        android:title="@string/fiveseven"
+        android:orderInCategory="98"
+        android:showAsAction="never" />
+    <item android:id="@+id/Mac10"
+        android:title="@string/mac10"
+        android:orderInCategory="97"
+        android:showAsAction="never" />
+    <item android:id="@+id/Awp"
+        android:title="@string/awp"
+        android:orderInCategory="96"
+        android:showAsAction="never" />
+
+
 </menu>

@@ -23,9 +23,12 @@ public class PPGStats extends Activity {
     private PebbleDataReceiver mDataReceiver = null;
     private final StringBuilder mDisplayText = new StringBuilder();
 
+
     private static MediaPlayer mediaPlayer;
 
     private static TextView armedDisplay;
+
+    private int soundFileToBePlayed = -1; //this is the id of the file name for the currently selected sound clip
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +47,12 @@ public class PPGStats extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+
+        soundFileToBePlayed = item.getItemId();
+        //TODO: update layout text to show currently selected file profile
+        playSound();
+        updateUI("Ready to play!");
+        return true;
     }
 
     @Override
@@ -71,19 +72,9 @@ public class PPGStats extends Activity {
             @Override
             public void receiveData(final Context context, int transactionId, PebbleDictionary data) {
                 PebbleKit.sendAckToPebble(context, transactionId);
-                mDisplayText.setLength(0);
-                mDisplayText.append(data.getString(keyMessage));
-                if (mDisplayText.toString().equals("pullpin")) {
-                    playSound(0);
-                    updateUI("Fire in the hole...!");
-                }
-                else if (mDisplayText.toString().equals("explosion")) {
-                    playSound(1);
-                    updateUI("Boom!");
-                }
+                playSound();
             }
         };
-
         PebbleKit.registerReceivedDataHandler(this, mDataReceiver);
     }
 
@@ -91,14 +82,17 @@ public class PPGStats extends Activity {
         armedDisplay.setText(text);
     }
 
-    private void playSound(int soundEffect) {
-        switch (soundEffect) {
-            case 0:
-                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.pullpin);
-                break;
-            case 1:
-                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
+    private void playSound() {
+        int id = soundFileToBePlayed;
+        if (id == R.id.Deagle) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.deagle);
+        } else if (id == R.id.PewPew) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.laser);
+        } else {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.ready1);
         }
+
+//                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
         mediaPlayer.start();
     }
 

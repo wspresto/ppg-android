@@ -4,5 +4,10 @@
     <string name="app_name">PPG-Android</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="deagle">Deagle</string>
+    <string name="awp">AWP</string>
+    <string name="fiveseven">FiveSeven</string>
+    <string name="pewpew">PewPew</string>
+    <string name="mac10">Mac10</string>
 
 </resources>
