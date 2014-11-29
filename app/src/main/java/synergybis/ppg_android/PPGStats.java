@@ -50,6 +50,22 @@ public class PPGStats extends Activity {
 
         soundFileToBePlayed = item.getItemId();
         //TODO: update layout text to show currently selected file profile
+        mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.ready1);
+        playSound();
+
+        int id = soundFileToBePlayed;
+        if (id == R.id.Deagle) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.deagle);
+        } else if (id == R.id.PewPew) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.laser);
+        } else if (id == R.id.Awp) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.awp);
+        } else if (id == R.id.Mac10) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.mac10);
+        } else if (id == R.id.FiveSeven) {
+            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.fiveseven);
+        }
+
         playSound();
         updateUI("Ready to play!");
         return true;
@@ -83,16 +99,6 @@ public class PPGStats extends Activity {
     }
 
     private void playSound() {
-        int id = soundFileToBePlayed;
-        if (id == R.id.Deagle) {
-            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.deagle);
-        } else if (id == R.id.PewPew) {
-            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.laser);
-        } else {
-            mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.ready1);
-        }
-
-//                mediaPlayer=MediaPlayer.create(PPGStats.this,R.raw.explosion);
         mediaPlayer.start();
     }
 
